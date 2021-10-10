@@ -1,0 +1,324 @@
+# PanelForm, un outil pour former des panels représentatifs, réalisé dans le cadre d'un projet pour l'ESCP BS
+# Par Colnat Martin & Héloïse Ardaillon
+
+from google.colab import auth
+auth.authenticate_user()
+
+import gspread
+from oauth2client.client import GoogleCredentials
+
+gc = gspread.authorize(GoogleCredentials.get_application_default())
+
+
+#On indique ici les worksheet d'entrée et de sortie
+
+worksheet = gc.open('Datas Panel Project').sheet1 #worksheet de départ
+sortie = gc.open('PanelFinal').sheet1 #Worksheet d'arrivée
+
+# Ici nous avons importé le Google Sheets au sein de notre code
+
+import math
+import random
+import statistics
+import pandas as pd
+random.seed
+
+
+# Nous initialisons ici les plug-ins dont nous avons besoin 
+
+rows = worksheet.get_all_values()
+head=rows[0]
+nbrcriteres=6
+del rows[0]
+taillehead=len(head)
+Table=pd.DataFrame.from_records(rows, columns=head)
+Infos=Table.describe()
+numberofvalues = Infos.iloc[0,0]
+Table['Âge'].astype(int)
+compteur = 1
+compteur2 = 1
+criteres=[]
+questions=[]
+while compteur<=nbrcriteres:
+  criteres.append(head[compteur-1])
+  compteur=compteur+1
+while compteur<=taillehead:
+  questions.append(head[compteur-1])
+  compteur=compteur+1
+while compteur2<=numberofvalues :
+  Comparaison = Table.iloc[compteur2-1,0]
+  Comparaison=int(Comparaison)
+  if Comparaison<=25 :
+    Table.iloc[compteur2-1,0]="18-25ans"
+  elif Comparaison<=40 :
+    Table.iloc[compteur2-1,0]="25-40ans"
+  else :
+    Table.iloc[compteur2-1,0]="Plus de 40 ans"
+  compteur2=compteur2+1
+  
+print(Table)
+print(criteres)
+print(questions)
+
+# Nous avons désormais notre tableau GSheets adapté au travail que l'on veut effectuer.
+
+class Age : 
+  def __init__(self):
+    self.Age_Values = ["18-25ans","25-40ans","Plus de 40 ans"]
+    self.Age_Repartition = [0.1,0.25,0.4]
+    self.nbrAge=len(self.Age_Values)
+  def getValues(self) :
+    print(self.Age_Values)
+  def getRepartition(self) :
+    print(self.Age_Repartition)
+
+class CSP :
+  def __init__(self):
+    self.CSP_Values = ["Etudiant","Cadre","Profession intermédiaire","Employé","Ouvrier","Indépendant","Agriculteur"]
+    self.CSP_Repartition = [0.08,0.2,0.23,0.23,0.19,0.06,0.01]
+    self.nbrCSP=len(self.CSP_Values)
+  def getValues(self) :
+    print(self.CSP_Values)
+  def getRepartition(self) :
+    print(self.CSP_Repartition)    
+
+class Sexe :
+  def __init__(self):
+    self.Sexe_Values = ["Homme","Femme"]
+    self.Sexe_Repartition = [0.5,0.5]
+    self.nbrSexe=len(self.Sexe_Values)
+  def getValues(self) :
+    print(self.Sexe_Values)
+  def getRepartition(self) :
+    print(self.Sexe_Repartition)
+
+
+class Region :
+  def __init__(self):
+    self.Region_Values = ["Auvergne-Rhône-Alpes","Bourgogne-Franche-Comté","Bretagne","Centre-Val de Loire","Corse","Grand Est","Hauts-de-France","Île-de-France","Normandie","Nouvelle-Aquitaine","Occitanie","Pays de la Loire","Provence-Alpes-Côte d'Azur"]
+    self.Region_Repartition = [0.14,0.04,0.05,0.035,0.005,0.08,0.09,0.185,0.05,0.1,0.09,0.06,0.075]
+    self.nbrRegion=len(self.Region_Values)
+  def getValues(self) :
+    print(self.Region_Values)
+  def getRepartition(self) :
+    print(self.Region_Repartition)
+
+class SituationMaritale : 
+  def __init__(self):
+    self.SituationMaritale_Values = ["Marié","Célibataire","Divorcé","Veuf","Pacsé"]
+    self.SituationMaritale_Repartition = [0.4,0.36,0.09,0.08,0.07]
+    self.nbrSituationMaritale=len(self.SituationMaritale_Values)
+  def getValues(self) :
+    print(self.SituationMaritale_Values)
+  def getRepartition(self) :
+    print(self.SituationMaritale_Repartition)
+
+class OrientationPol : 
+  def __init__(self):
+    self.OrientationPol_Values = ["Extrème gauche","Gauche","Centre","Droite","Extrème droite"]
+    self.OrientationPol_Repartition = [0.03,0.13,0.32,0.39,0.13]
+    self.nbrOrientationPol=len(self.OrientationPol_Values)
+  def getValues(self) :
+    print(self.OrientationPol_Values)
+  def getRepartition(self) :
+    print(self.OrientationPol_Repartition)
+
+class Compostage : 
+  def __init__(self):
+    self.Compostage_Values = ["Oui","Non"]
+    self.Compostage_Repartition = [0.13,0.87]
+  def getValues(self) :
+    print(self.Compostage_Values)
+  def getRepartition(self) :
+    print(self.Compostage_Repartition)
+
+
+class TransportPublic : 
+  def __init__(self):
+    self.TransportPublic_Values = ["Oui","Non"]
+    self.Transport_Repartition = [0.76,0.24]
+  def getValues(self) :
+    print(self.TransportPublic_Values)
+  def getRepartition(self) :
+    print(self.TransportPublic_Repartition)
+
+class SecondeMain :  
+  def __init__(self):
+    self.SecondeMain_Values = ["Oui","Non"]
+    self.SecondeMain_Repartition = [0.33,0.67]
+  def getValues(self) :
+    print(self.SecondeMain_Values)
+  def getRepartition(self) :
+    print(self.SecondeMain_Repartition)
+
+    # Nous avons ici défini toutes les classes de type "Critères", par souci de lisibilité, nous avons préféré les différencier mais nous aurons également pu les rassembler en une seule et même classe
+
+class Panel :
+  def  __init__(self):
+    self.Panel = []
+    self.ListeIndividus = []
+    self.panelrealised = 0
+
+  def createPanel(self,taille):
+    self.taille=taille
+    aleatoire=int(math.floor(random.uniform(0, numberofvalues)))
+    while self.panelrealised < taille:
+      while aleatoire in self.ListeIndividus:
+        aleatoire=int(math.floor(random.uniform(0, numberofvalues)))
+      self.ListeIndividus.append(int(aleatoire))
+      self.Panel.append(rows[aleatoire])
+      self.panelrealised = self.panelrealised+1
+    self.Paneltable=pd.DataFrame.from_records(self.Panel, columns=head)
+    self.compteur2=1
+    while self.compteur2<=taille :
+      self.Comparaison = self.Paneltable.iloc[self.compteur2-1,0]
+      self.Comparaison=int(self.Comparaison)
+      if self.Comparaison<=25 :
+        self.Paneltable.iloc[self.compteur2-1,0]="18-25ans"
+      elif self.Comparaison<=40 :
+        self.Paneltable.iloc[self.compteur2-1,0]="25-40ans"
+      else :
+        self.Paneltable.iloc[self.compteur2-1,0]="Plus de 40 ans"
+      self.compteur2=self.compteur2+1
+  
+  def getPanel(self):
+    print(self.ListeIndividus)
+    print(self.Paneltable)
+  
+  def IndividuType(self):
+    self.IndiType=self.Paneltable.describe()
+    print(self.IndiType.iloc[2,:])
+
+  
+  def getBiais(self,coeff1, coeff2, coeff3, coeff4, coeff5, coeff6):
+    self.PopAge=Age()
+    self.PopSexe=Sexe()
+    self.PopSou=CSP()
+    self.PopRegion=Region()
+    self.PopAmour=SituationMaritale()
+    self.Popol=OrientationPol()
+    self.biais=0
+    self.compteurbiais=0
+    self.biais1=0
+    self.biais2=0
+    self.biais3=0
+    self.biais4=0
+    self.biais5=0
+    self.biais6=0
+
+
+
+    while self.compteurbiais<self.PopAge.nbrAge:
+     self.a=(len(self.Paneltable[self.Paneltable['Âge'] == self.PopAge.Age_Values[self.compteurbiais]])/self.taille)
+     self.b=(self.PopAge.Age_Repartition[self.compteurbiais])
+     self.biais1=self.biais1+(abs(self.a-self.b))
+     self.compteurbiais=self.compteurbiais+1
+    self.biais1=self.biais1/self.PopAge.nbrAge
+    self.compteurbiais=0
+
+
+    while self.compteurbiais<self.PopSexe.nbrSexe:
+     self.a=(len(self.Paneltable[self.Paneltable['Sexe'] == self.PopSexe.Sexe_Values[self.compteurbiais]])/self.taille)
+     self.b=(self.PopSexe.Sexe_Repartition[self.compteurbiais])
+     self.biais2=self.biais2+(abs(self.a-self.b))
+     self.compteurbiais=self.compteurbiais+1
+    self.biais2=self.biais2/self.PopSexe.nbrSexe
+    self.compteurbiais=0
+
+
+    while self.compteurbiais<self.PopSou.nbrCSP:
+     self.a=(len(self.Paneltable[self.Paneltable['CSP'] == self.PopSou.CSP_Values[self.compteurbiais]])/self.taille)
+     self.b=(self.PopSou.CSP_Repartition[self.compteurbiais])
+     self.biais3=self.biais3+(abs(self.a-self.b))
+     self.compteurbiais=self.compteurbiais+1
+    self.biais3=self.biais3/self.PopSou.nbrCSP
+    self.compteurbiais=0
+
+
+    while self.compteurbiais<self.PopRegion.nbrRegion:
+     self.a=(len(self.Paneltable[self.Paneltable['Région'] == self.PopRegion.Region_Values[self.compteurbiais]])/self.taille)
+     self.b=(self.PopRegion.Region_Repartition[self.compteurbiais])
+     self.biais4=self.biais4+(abs(self.a-self.b))
+     self.compteurbiais=self.compteurbiais+1
+    self.biais4=self.biais4/self.PopRegion.nbrRegion
+    self.compteurbiais=0
+
+
+    while self.compteurbiais<self.PopAmour.nbrSituationMaritale:
+     self.a=(len(self.Paneltable[self.Paneltable['Situation Maritale'] == self.PopAmour.SituationMaritale_Values[self.compteurbiais]])/self.taille)
+     self.b=(self.PopAmour.SituationMaritale_Repartition[self.compteurbiais])
+     self.biais5=self.biais5+(abs(self.a-self.b))
+     self.compteurbiais=self.compteurbiais+1
+    self.biais5=self.biais5/self.PopAmour.nbrSituationMaritale
+    self.compteurbiais=0
+
+
+    while self.compteurbiais<self.Popol.nbrOrientationPol:
+     self.a=(len(self.Paneltable[self.Paneltable['Orientation politique'] == self.Popol.OrientationPol_Values[self.compteurbiais]])/self.taille)
+     self.b=(self.Popol.OrientationPol_Repartition[self.compteurbiais])
+     self.biais6=self.biais6+(abs(self.a-self.b))
+     self.compteurbiais=self.compteurbiais+1
+    self.biais6=self.biais6/self.Popol.nbrOrientationPol
+    self.compteurbiais=0
+
+
+
+    self.biais=(self.biais1*coeff1+self.biais2*coeff2+self.biais3*coeff3+self.biais4*coeff4+self.biais5*coeff5+self.biais6*coeff6)/(6*coeff1*coeff2*coeff3*coeff4*coeff5*coeff6)
+                     
+    # La classe Panel génère un échantillon de "taille" individus différents.
+
+class PanelRepresentatif:
+  def __init__(self,precision):
+    self.astrid = precision
+    self.MonteCarlo = 0
+    self.PopAge=Age()
+    self.PopSexe=Sexe()
+    self.PopSou=CSP()
+    self.PopRegion=Region()
+    self.PopAmour=SituationMaritale()
+    self.Popol=OrientationPol()
+    self.biaisPanelenCours=0                
+    self.biaisPanelRepresentatif=100000       #Ici nous mettons une valeur inutilement importante afin d'être sûr qu'elle soit remplacée à tous les cas à la première itération de la boucle dans CreateRePanel.
+ 
+  def createRePanel(self,coeff1,coeff2,coeff3,coeff4,coeff5,coeff6,qte):
+    self.qte=qte
+    while self.MonteCarlo<self.astrid: 
+      self.fctPanel=Panel() 
+      self.fctPanel.createPanel(self.qte)
+      self.fctPanel.getBiais(coeff1,coeff2,coeff3,coeff4,coeff5,coeff6)
+      self.biaisPanelenCours=self.fctPanel.biais
+      self.PanelenCours=self.fctPanel.Panel
+      if self.biaisPanelenCours<self.biaisPanelRepresentatif:
+        self.biaisPanelRepresentatif=self.biaisPanelenCours
+        self.PanelRepresentatif=self.PanelenCours
+      self.MonteCarlo=self.MonteCarlo+1
+    print(self.PanelRepresentatif)
+    print(pd.DataFrame.from_records(self.PanelRepresentatif, columns=head))
+    print(str(self.biaisPanelRepresentatif)+" Biais du panel représentatif ")
+
+  def RePanelversGSheets(self):
+    self.i=1
+    while self.i<=taillehead:
+      sortie.update_cell(1,self.i,head[self.i-1])
+      self.i=self.i+1   
+    self.k=1
+    self.i=1
+    while self.k<self.qte:
+      while self.i<=taillehead:
+        sortie.update_cell(self.k+1,self.i,self.PanelRepresentatif[self.k-1][self.i-1])
+        self.i=self.i+1
+      self.i=1
+      self.k=self.k+1
+      
+
+# Code principal
+
+panel=Panel()
+panel.createPanel(100)
+panel.getPanel()
+panel.IndividuType()
+panel.getBiais(1,1,1,1,1,1)
+print(panel.biais)
+Panelfinal=PanelRepresentatif(100)
+Panelfinal.createRePanel(1,1,1,1,1,1,50)
+Panelfinal.RePanelversGSheets()
